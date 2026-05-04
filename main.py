@@ -1,13 +1,20 @@
+
 from fastapi import FastAPI, HTTPException
 from telethon import TelegramClient
 from pydantic import BaseModel
+import os, base64
 
-API_ID   = 31185413          
-API_HASH = "a24abffa2e4131c577d0d5d281c79e1f" 
-SESSION  = "prinom-1"
+API_ID   = int(os.environ.get("31185413"))
+API_HASH = os.environ.get("a24abffa2e4131c577d0d5d281c79e1f")
+SESSION  = os.environ.get("prinom-1")
+
+# Session string থেকে file বানাও
+session_bytes = base64.b64decode(SESSION)
+with open("session.session", "wb") as f:
+    f.write(session_bytes)
 
 app = FastAPI()
-client = TelegramClient(SESSION, API_ID, API_HASH)
+client = TelegramClient("session", API_ID, API_HASH)
 
 class MessageRequest(BaseModel):
     to: str
